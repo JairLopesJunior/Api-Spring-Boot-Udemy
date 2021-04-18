@@ -1,5 +1,7 @@
 package api.spring.boot.udemy;
 
+import api.spring.boot.udemy.domain.entity.Cliente;
+import api.spring.boot.udemy.domain.repository.Clientes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,26 +12,46 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @SpringBootApplication
 @RestController
 public class VendasApplication {
 
-    @Value("${application.name}")
-    private String applicationName;
-
-    @Gato
-    private Animal animal;
-
-    @Bean(name = "executarAnimal")
-    public CommandLineRunner executar(){
+    @Bean
+    public CommandLineRunner init(@Autowired Clientes clientes){
         return args -> {
-            this.animal.fazerBarulho();
-        };
-    }
+          Cliente cliente = new Cliente();
+          cliente.setNome("Jair");
+          clientes.salvar(cliente);
 
-    @GetMapping("/hello")
-    public String helloWorld(){
-        return applicationName;
+            Cliente cliente2 = new Cliente();
+            cliente2.setNome("Joao");
+            clientes.salvar(cliente2);
+
+            List<Cliente> todosClientes = clientes.obterTodos();
+            todosClientes.forEach(System.out::println);
+
+            todosClientes.forEach(c -> {
+                c.setNome(c.getNome() + " atualizado");
+                clientes.atualizar(c);
+            });
+
+            System.out.println("Buscando por nome:");
+            clientes.buscarPorNome("oa").forEach(System.out::println);
+
+            System.out.println("Deletando:");
+            clientes.obterTodos().forEach(c -> {
+                clientes.delete(c);
+            });
+
+            todosClientes = clientes.obterTodos();
+            if(todosClientes.isEmpty()){
+                System.out.println("Nenhum cliente encontrado");
+            }else{
+                todosClientes.forEach(System.out::println);
+            }
+        };
     }
 
     public static void main(String[] args) {
