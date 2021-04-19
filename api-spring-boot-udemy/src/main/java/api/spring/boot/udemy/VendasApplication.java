@@ -21,31 +21,29 @@ public class VendasApplication {
     @Bean
     public CommandLineRunner init(@Autowired Clientes clientes){
         return args -> {
-            Cliente cliente = new Cliente();
-            cliente.setNome("Jair");
-            clientes.salvar(cliente);
+            clientes.save(new Cliente("Jair"));
 
             Cliente cliente2 = new Cliente();
             cliente2.setNome("Joao");
-            clientes.salvar(cliente2);
+            clientes.save(cliente2);
 
-            List<Cliente> todosClientes = clientes.obterTodos();
+            List<Cliente> todosClientes = clientes.findAll();
             todosClientes.forEach(System.out::println);
 
             todosClientes.forEach(c -> {
                 c.setNome(c.getNome() + " atualizado");
-                clientes.atualizar(c);
+                clientes.save(c);
             });
 
             System.out.println("Buscando por nome:");
-            clientes.buscarPorNome("oa").forEach(System.out::println);
+            clientes.findByNomeLike("oa").forEach(System.out::println);
 
             System.out.println("Deletando:");
-            clientes.obterTodos().forEach(c -> {
-                clientes.deletar(c);
+            clientes.findAll().forEach(c -> {
+                clientes.delete(c);
             });
 
-            todosClientes = clientes.obterTodos();
+            todosClientes = clientes.findAll();
             if(todosClientes.isEmpty()){
                 System.out.println("Nenhum cliente encontrado");
             }else{
