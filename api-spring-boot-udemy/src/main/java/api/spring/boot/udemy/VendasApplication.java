@@ -21,14 +21,14 @@ public class VendasApplication {
     @Bean
     public CommandLineRunner init(@Autowired Clientes clientes){
         return args -> {
-            clientes.save(new Cliente("Jai"));
+            clientes.save(new Cliente("Jair"));
 
             Cliente cliente2 = new Cliente();
             cliente2.setNome("Joao");
             clientes.save(cliente2);
 
-            boolean existe = clientes.existsByNome("Jair");
-            System.out.println("Existe um cliente com nome Jair? " + existe);
+            List<Cliente> lista = clientes.encontrarPorNome("Jair");
+            lista.forEach(System.out::println);
         };
     }
 
