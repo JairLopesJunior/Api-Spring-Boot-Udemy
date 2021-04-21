@@ -1,18 +1,30 @@
 package api.spring.boot.udemy.rest.controller;
 
+import api.spring.boot.udemy.domain.entity.Cliente;
+import api.spring.boot.udemy.domain.repository.Clientes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
-@RequestMapping("/api/clientes")
 public class ClienteController {
 
-    @RequestMapping(value = "/hello/{nome}",
-                    method = RequestMethod.GET,
-                    consumes = {"application/json","application/xml"},
-                    produces = {"application/json","application/xml"})
+    private Clientes clientes;
+
+    public ClienteController(Clientes clientes) {
+        this.clientes = clientes;
+    }
+
+    @GetMapping("/api/clientes/{id}")
     @ResponseBody
-    public String hello(@PathVariable("nome") String nomeCliente){
-        return String.format("Hello %s", nomeCliente);
+    public ResponseEntity<Cliente> getClienteById( @PathVariable Integer id ){
+        Optional<Cliente> clienteOptional = clientes.findById(id);
+        if(clienteOptional.isPresent()){
+            return ResponseEntity.ok(clienteOptional.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 }
