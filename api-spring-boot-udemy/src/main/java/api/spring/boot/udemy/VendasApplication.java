@@ -13,13 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class VendasApplication {
 
-    @Bean
-    public CommandLineRunner salvarCliente(@Autowired Clientes clientes){
-        return args -> {
-            clientes.save(new Cliente(null,"jair"));
-        };
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(VendasApplication.class, args);
     }
