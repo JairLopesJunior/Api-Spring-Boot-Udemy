@@ -17,14 +17,26 @@ public class Cliente {
     @Column(name = "nome", length = 100)
     private String nome;
 
+    @Column(name = "cpf", length = 11)
+    private String cpf;
+
     @JsonIgnore
     @OneToMany( mappedBy = "cliente", fetch = FetchType.LAZY )
     private Set<Pedido> pedidos;
 
     public Cliente(){}
 
-    public Cliente(String nome) {
+    public Cliente(String nome, String cpf) {
         this.nome = nome;
+        this.cpf = cpf;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public Cliente(Integer id, String nome) {
@@ -61,6 +73,7 @@ public class Cliente {
         return "Cliente{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
                 '}';
     }
 }
