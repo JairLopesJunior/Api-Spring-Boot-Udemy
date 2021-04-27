@@ -9,6 +9,7 @@ import io.github.dougllasfps.domain.repository.Clientes;
 import io.github.dougllasfps.domain.repository.ItemsPedido;
 import io.github.dougllasfps.domain.repository.Pedidos;
 import io.github.dougllasfps.domain.repository.Produtos;
+import io.github.dougllasfps.exception.PedidoNaoEncontradoException;
 import io.github.dougllasfps.exception.RegraNegocioException;
 import io.github.dougllasfps.rest.dto.ItemPedidoDTO;
 import io.github.dougllasfps.rest.dto.PedidoDTO;
@@ -56,6 +57,17 @@ public class PedidoServiceImpl implements PedidoService {
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
 
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        repository
+                .findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return repository.save(pedido);
+                }).orElseThrow( () -> new PedidoNaoEncontradoException());
     }
 
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> items){

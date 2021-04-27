@@ -2,11 +2,12 @@ package io.github.dougllasfps.rest.controller;
 
 import io.github.dougllasfps.domain.entity.ItemPedido;
 import io.github.dougllasfps.domain.entity.Pedido;
+import io.github.dougllasfps.domain.enums.StatusPedido;
+import io.github.dougllasfps.rest.dto.AtualizacaoStatusPedidoDTO;
 import io.github.dougllasfps.rest.dto.InformacaoItemPedidoDTO;
 import io.github.dougllasfps.rest.dto.InformacoesPedidoDTO;
 import io.github.dougllasfps.rest.dto.PedidoDTO;
 import io.github.dougllasfps.service.PedidoService;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,6 +43,14 @@ public class PedidoController {
                 .map( p -> converter(p) )
                 .orElseThrow( () ->
                         new ResponseStatusException(NOT_FOUND, "Pedido não encontrado"));
+    }
+
+    @PatchMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto ){
+        String novoStatus = dto.getNovoStatus();
+        service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
     }
 
     private InformacoesPedidoDTO converter(Pedido pedido){
