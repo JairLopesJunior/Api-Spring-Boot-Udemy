@@ -4,6 +4,7 @@ import io.github.dougllasfps.domain.entity.Cliente;
 import io.github.dougllasfps.domain.entity.ItemPedido;
 import io.github.dougllasfps.domain.entity.Pedido;
 import io.github.dougllasfps.domain.entity.Produto;
+import io.github.dougllasfps.domain.enums.StatusPedido;
 import io.github.dougllasfps.domain.repository.Clientes;
 import io.github.dougllasfps.domain.repository.ItemsPedido;
 import io.github.dougllasfps.domain.repository.Pedidos;
@@ -42,6 +43,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.REALIZADO);
 
         List<ItemPedido> itemsPedido = converterItems(pedido, dto.getItems());
         repository.save(pedido);
