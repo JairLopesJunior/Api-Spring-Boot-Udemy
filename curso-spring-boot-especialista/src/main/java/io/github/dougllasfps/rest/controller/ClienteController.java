@@ -2,6 +2,10 @@ package io.github.dougllasfps.rest.controller;
 
 import io.github.dougllasfps.domain.entity.Cliente;
 import io.github.dougllasfps.domain.repository.Clientes;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +32,12 @@ public class ClienteController {
     }
 
     @GetMapping("{id}")
-    public Cliente getClienteById( @PathVariable Integer id ){
+    @ApiOperation("Obter detalhes de um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente encontrado"),
+            @ApiResponse(code = 404, message = "Cliente não encontrado para o ID informado")
+    })
+    public Cliente getClienteById( @PathVariable @ApiParam("Id do cliente") Integer id ){
         return clientes
                 .findById(id)
                 .orElseThrow(() ->
@@ -38,6 +47,11 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("Salva um novo cliente")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Cliente salvo  com sucesso"),
+            @ApiResponse(code = 400, message = "Erro de validação")
+    })
     public Cliente save( @RequestBody @Valid Cliente cliente ){
         return clientes.save(cliente);
     }
